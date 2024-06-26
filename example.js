@@ -41,4 +41,32 @@ function createVisualization(data) {
     .attr("stroke-width", 1.5)
     .attr("d", line);
 
-  
+   const tooltip = d3.select("#tooltip").style("opacity", 0);
+//Create Mouseover function
+  g.selectAll("line") 
+    .data(data)
+    .enter()
+    .append("line")
+    .attr("cx", d => xScale(d.date))
+    .attr("cy", d => yScale(d.price))
+    .attr("r", 3) // Adjust circle radius as needed
+    .attr("fill", "steelblue")
+    .on("mouseover", (event, d) => {
+      tooltip.transition()
+        .duration(200)
+        .style("opacity", 0.9);
+      tooltip.html(`
+        Stock: ${d.stock}<br>
+        Price: ${d.price}<br>
+        Date: ${d.date.toLocaleDateString()}`
+      )
+        .style("left", (event.pageX + 5) + "px")
+        .style("top", (event.pageY + 5) + "px");
+    })
+    .on("mouseout", () => {
+      tooltip.transition()
+        .duration(500)
+        .style("opacity", 0);
+    });
+}
+
